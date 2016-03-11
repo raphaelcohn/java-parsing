@@ -16,9 +16,6 @@
 [submodule "library/charsetDetector"]
 	path = library/charsetDetector
 	url = https://github.com/raphaelcohn/charsetDetector.git
-[submodule "library/path"]
-	path = library/path
-	url = https://github.com/raphaelcohn/path.git
 [submodule "library/java-classfile"]
 	path = library/java-classfile
 	url = https://github.com/raphaelcohn/java-classfile.git
