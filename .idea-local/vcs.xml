@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/.idea" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/annotations" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/asm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/charsetDetector" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/java-classfile" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/javaparser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/jopt-simple" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library/path" vcs="Git" />
+  </component>
+</project>
