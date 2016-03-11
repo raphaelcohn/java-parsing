@@ -2,27 +2,26 @@ package com.stormmq.java.parsing.adaptors.javaparser.ast;
 
 import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.CompilationUnit;
-import com.stormmq.java.parsing.adaptors.javaparser.dead.wrappers.compilationUnitWrapperUsers.CompilationUnitWrapperUser;
 import com.stormmq.java.parsing.adaptors.javaparser.dead.wrappers.CompilationUnitWrapper;
-import com.stormmq.java.parsing.fileParsers.caches.Cache;
+import com.stormmq.java.parsing.adaptors.javaparser.dead.wrappers.compilationUnitWrapperUsers.CompilationUnitWrapperUser;
 import com.stormmq.java.parsing.fileParsers.FileParser;
+import com.stormmq.java.parsing.fileParsers.caches.Cache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static com.github.javaparser.AstParserAdaptor.parse;
+import static com.stormmq.charsetDetector.CharsetDetector.detectCharset;
 import static com.stormmq.path.FileAndFolderHelper.*;
 import static java.lang.String.format;
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 import static java.util.Locale.ENGLISH;
-import static com.github.javaparser.AstParserAdaptor.parse;
 
 public final class JavaparserSourceFileParser implements FileParser
 {
@@ -35,6 +34,7 @@ public final class JavaparserSourceFileParser implements FileParser
 		this.compilationUnitWrapperUser = compilationUnitWrapperUser;
 	}
 
+	@Override
 	public void parseFile(@NotNull final Path filePath, @NotNull final Path sourceRootPath)
 	{
 		final Path relativeFilePath = relativeToRootPath(sourceRootPath, filePath);
@@ -49,7 +49,7 @@ public final class JavaparserSourceFileParser implements FileParser
 			{
 				code = readAllBytes(filePath);
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				throw new IllegalStateException(format(ENGLISH, "Could not read file '%s'", filePathName));
 			}
@@ -96,9 +96,9 @@ public final class JavaparserSourceFileParser implements FileParser
 	@NotNull
 	private CompilationUnitWrapper parseBytes(@NotNull final String filePathName, @NotNull final byte[] code)
 	{
-		final Charset encoding = CharsetDetector.detectCharacterSet(code);
+		final Charset encoding = detectCharset(true, code);
 
-		@NotNull final InputStream inputStream = new ByteArrayInputStream(code);
+		@SuppressWarnings("resource") @NotNull final InputStream inputStream = new ByteArrayInputStream(code);
 
 		final CompilationUnit compilationUnit;
 		try

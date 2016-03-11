@@ -13,5 +13,6 @@
     <orderEntry type="module" module-name="java-parsing-fileParsers" />
     <orderEntry type="module" module-name="java-parsing-utilities" />
     <orderEntry type="module" module-name="path" />
+    <orderEntry type="module" module-name="charsetDetector" />
   </component>
 </module>

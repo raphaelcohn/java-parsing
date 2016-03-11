@@ -3,19 +3,13 @@ package com.stormmq.java.parsing.fileParsers;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.*;
 
-import static com.stormmq.path.FileAndFolderHelper.relativeToRootPath;
-import static com.stormmq.path.FileAndFolderHelper.walkTreeFollowingSymlinks;
-import static com.stormmq.path.IsFileTypeFilter.IsJarOrZipFile;
-import static com.stormmq.path.IsFileTypeFilter.IsJavaOrClassFile;
+import static com.stormmq.path.FileAndFolderHelper.*;
+import static com.stormmq.path.IsFileTypeFilter.*;
 import static com.stormmq.path.IsSubFolderFilter.IsSubFolder;
 import static java.lang.String.format;
 import static java.nio.file.FileVisitResult.CONTINUE;
@@ -32,7 +26,7 @@ public final class MultiplePathsParser
 		this.javaClassFileParser = javaClassFileParser;
 	}
 
-	public void parse(@NotNull final LinkedHashSet<Path> paths)
+	public void parse(@NotNull final Iterable<Path> paths)
 	{
 		for (final Path path : paths)
 		{
@@ -61,8 +55,10 @@ public final class MultiplePathsParser
 		walkTreeFollowingSymlinks(dependencyPath, new SimpleFileVisitor<Path>()
 		{
 			@Override
-			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException
+			public FileVisitResult visitFile(@NotNull final Path file, @NotNull final BasicFileAttributes attrs) throws IOException
 			{
+				super.visitFile(file, attrs);
+
 				if (IsJarOrZipFile.accept(file))
 				{
 					processJarOrZipFile(file);
@@ -87,6 +83,10 @@ public final class MultiplePathsParser
 
 				processZipEntry(zipFile, zipEntry);
 			}
+		}
+		catch (final ZipException e)
+		{
+			throw new IllegalStateException(format(ENGLISH, "Could not read jar / zip archive '%1$s' because of ZipException '%2$s'", zipFilePath.toString(), e.getMessage()), e);
 		}
 		catch (final IOException e)
 		{
@@ -127,13 +127,4 @@ public final class MultiplePathsParser
 		}
 	}
 
-	private boolean isJavaFile(final String name)
-	{
-		return name.endsWith(".java");
-	}
-
-	private boolean isClassFile(final String name)
-	{
-		return name.endsWith(".class");
-	}
 }
